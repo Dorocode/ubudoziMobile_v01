@@ -1,0 +1,12 @@
+platform :ios, '12.0'
+
+# Specify the target app name here
+target 'Runner' do
+  use_frameworks!
+  pod 'Firebase/Core'  # Add Firebase Core dependency here
+  
+  # Add any other Firebase dependencies you want here, for example:
+  # pod 'Firebase/Auth'
+  # pod 'Firebase/Firestore'
+  
+end

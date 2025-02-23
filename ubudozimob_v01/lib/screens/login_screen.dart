@@ -1,7 +1,34 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
+import 'package:ubudozimob_v01/utils/shared_prefs.dart';
+import 'signup_screen.dart';
+import '../services/auth_service.dart';
 
-class SignupScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    print("Login function started");
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    print("Email: $email, Password: $password"); //check if input it correct
+    
+    String? token = await AuthService().login(email, password);
+    if (token != null) {
+      print("Login Sucessuful! Token: $token");
+      await SharedPrefs.saveToken(token);
+      //store token for the future use
+    } else {
+      print("Login failed");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,7 +39,7 @@ class SignupScreen extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               const Color.fromARGB(255, 255, 255, 255),
-              const Color.fromARGB(255, 174, 240, 234)
+              const Color.fromARGB(255, 87, 158, 152)
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -25,11 +52,11 @@ class SignupScreen extends StatelessWidget {
             children: [
               SizedBox(height: 80),
               Text(
-                "Create Account",
+                "UBUDOZI",
                 style: TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 2, 76, 82),
+                  color: Color.fromARGB(255, 2, 76, 82),
                 ),
               ),
               SizedBox(height: 0),
@@ -45,13 +72,7 @@ class SignupScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextField(
-                      decoration: InputDecoration(
-                        labelText: "Name",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         labelText: "Email",
                         border: OutlineInputBorder(),
@@ -59,13 +80,7 @@ class SignupScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 15),
                     TextField(
-                      decoration: InputDecoration(
-                        labelText: "Phone",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: "Password",
@@ -81,16 +96,23 @@ class SignupScreen extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
+                                    builder: (context) => SignupScreen()));
                           },
-                          child: Text("Sign In"),
+                          child: Text("Sign Up"),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Text("Forgot Password"),
                         ),
                       ],
                     ),
                     SizedBox(height: 10),
                     Center(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          print("login button clicked");
+                          _login();
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               vertical: 14, horizontal: 40),
@@ -101,11 +123,10 @@ class SignupScreen extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text("Sign Up",
+                            Text("Sign in",
                                 style: TextStyle(
                                     fontSize: 16,
-                                    color:
-                                        const Color.fromARGB(255, 1, 48, 45))),
+                                    color: Color.fromARGB(255, 2, 76, 82))),
                             SizedBox(width: 10),
                             Icon(Icons.arrow_forward),
                           ],

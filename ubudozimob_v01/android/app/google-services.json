@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "817355422299",
+    "project_id": "ubudozimobapp",
+    "storage_bucket": "ubudozimobapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817355422299:android:374a32e8136b680b821d7e",
+        "android_client_info": {
+          "package_name": "com.example.ubudozimob_v01"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnrdVvk_YhZh6n9jJIFxUTfZXD0Y36fHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
