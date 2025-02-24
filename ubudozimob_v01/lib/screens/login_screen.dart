@@ -2,30 +2,48 @@ import 'package:flutter/material.dart';
 import 'package:ubudozimob_v01/utils/shared_prefs.dart';
 import 'signup_screen.dart';
 import '../services/auth_service.dart';
+import '../screens/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future<void> _login() async {
-    print("Login function started");
-    String email = emailController.text;
-    String password = passwordController.text;
+  void _handleLogin() async {
+    print("Login function started!");
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
 
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Please enter both email and password")));
+      return;
+    }
     print("Email: $email, Password: $password"); //check if input it correct
-    
-    String? token = await AuthService().login(email, password);
-    if (token != null) {
-      print("Login Sucessuful! Token: $token");
-      await SharedPrefs.saveToken(token);
-      //store token for the future use
+
+    // String? token = await AuthService().login(email, password);
+    // if (token != null) {
+    //   print("Login Sucessuful! Token: $token");
+    //   await SharedPrefs.saveToken(token);
+    //   //store token for the future use
+    // } else {
+    //   print("Login failed");
+    // }
+
+    bool loginSuccess = await AuthService().login(email, password);
+
+    if (loginSuccess) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DashboardScreen()),
+      );
     } else {
-      print("Login failed");
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Login failed. Check your credentials")));
     }
   }
 
@@ -111,7 +129,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           print("login button clicked");
-                          _login();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DashboardScreen()),
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(

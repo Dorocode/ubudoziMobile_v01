@@ -3,25 +3,28 @@ import 'package:http/http.dart' as http;
 
 class AuthService {
   final String baseUrl = "http://192.168.19.197:3000/tailors";
-  Future<String?> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/tlogin"),
-        body: jsonEncode({"email": email, "password": password}),
         headers: {"Content-Type": "application/json"},
+        body: jsonEncode({"email": email, "password": password}),
       );
-      print("Response  Status code: ${response.statusCode}");
-      print("Response Body: ${response.body}");
+      // print("Response  Status code: ${response.statusCode}");
+      // print("Response Body: ${response.body}");
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        return data["token"]; // Return JWT token
-      } else {
-        print("Login Failed: ${response.statusCode}");
-        return null;
+        String? token = data['token'];
+        if (token != null && token.isNotEmpty) {
+          print("Login successful. Token: $token");
+          return true;
+        }
       }
+      print("Login Failed. Response: ${response.body}");
+      return false;
     } catch (e) {
-      print("Error during login:$e");
-      return null;
+      print("Error during login: $e");
+      return false;
     }
   }
 
